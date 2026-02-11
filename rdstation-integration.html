@@ -1,0 +1,482 @@
+<!-- ===================================
+     RD STATION - INTEGRAÇÃO DE FORMULÁRIOS
+     =================================== -->
+
+<!-- INSTRUÇÕES DE USO:
+     1. Copie os blocos abaixo e cole no <body> do index.html (antes do fechamento </body>)
+     2. Substitua os IDs/tokens pelos dados reais da sua conta RD Station
+     3. Configure os popups e floating bars conforme necessário
+-->
+
+<!-- ===== POPUP CENTRAL ===== -->
+<div id="rd-popup-central-wrapper" class="rdstation-popup-wrapper rdstation-popup-position-center" data-embedded="false" style="display: none;">
+    <div id="rd-popup-central" class="rdstation-popup">
+
+        <!-- Botão de Fechar -->
+        <button class="rd-close-button" onclick="closeRDPopup('rd-popup-central-wrapper')" aria-label="Fechar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+
+        <!-- Conteúdo do Popup -->
+        <div class="rd-popup-content">
+            <h3>Fale com a Adaflow</h3>
+            <p>Preencha o formulário abaixo e nossa equipe entrará em contato.</p>
+
+            <!-- Formulário RD Station -->
+            <form action="https://cta-redirect.rdstation.com/v2/conversions"
+                  method="POST"
+                  class="rd-form"
+                  data-typed-fields="1"
+                  data-lang="pt-BR">
+
+                <!-- Token da Conta (substitua pelo seu) -->
+                <input type="hidden" name="token_rdstation" value="SEU_TOKEN_RDSTATION_AQUI">
+                <input type="hidden" name="identificador" value="popup-central-home">
+                <input type="hidden" name="privacy_data[browser]" value="">
+                <input type="hidden" name="privacy_data[mobile]" value="">
+
+                <!-- Campos do Formulário -->
+                <div class="rd-form-group">
+                    <label for="rd-name">Nome completo *</label>
+                    <input type="text" id="rd-name" name="name" required>
+                </div>
+
+                <div class="rd-form-group">
+                    <label for="rd-email">E-mail *</label>
+                    <input type="email" id="rd-email" name="email" required>
+                </div>
+
+                <div class="rd-form-group">
+                    <label for="rd-phone">Telefone/WhatsApp *</label>
+                    <input type="tel" id="rd-phone" name="personal_phone" required>
+                </div>
+
+                <div class="rd-form-group">
+                    <label for="rd-message">Mensagem</label>
+                    <textarea id="rd-message" name="custom_fields[mensagem]" rows="4"></textarea>
+                </div>
+
+                <!-- Checkbox LGPD -->
+                <div class="rd-form-group rd-checkbox">
+                    <label>
+                        <input type="checkbox" name="legal_bases[0][category]" value="communications" required>
+                        <span>Eu concordo em receber comunicações da Adaflow *</span>
+                    </label>
+                </div>
+
+                <!-- Botão de Envio -->
+                <button type="submit" class="btn-primary btn-block">Enviar</button>
+
+                <p class="rd-form-disclaimer">
+                    Seus dados estão protegidos conosco. Leia nossa <a href="https://www.adaflow.com/termos-e-condicoes" target="_blank">Política de Privacidade</a>.
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="rd-popup-overlay" onclick="closeRDPopup('rd-popup-central-wrapper')"></div>
+</div>
+
+<!-- ===== FLOATING BAR (BOTTOM LEFT) ===== -->
+<div id="rd-floating-bar" class="rdstation-floating-bar rdstation-popup-position-bottom-left" data-embedded="false">
+    <button class="rd-close-button-small" onclick="closeFloatingBar()" aria-label="Fechar">
+        ×
+    </button>
+
+    <div class="rd-floating-content">
+        <div class="rd-floating-text">
+            <strong>Quer abrir sua empresa em 24h?</strong>
+            <span>Fale com nossa equipe agora!</span>
+        </div>
+        <a href="https://lovelace.adaflow.com/contatosales"
+           class="btn-primary rd-floating-cta"
+           target="_blank"
+           onclick="trackRDEvent('floating-bar', 'click', 'contato-sales')">
+            Falar com Vendas
+        </a>
+    </div>
+</div>
+
+<!-- ===== CSS PARA POPUPS E FLOATING BAR ===== -->
+<style>
+/* Popup Central */
+.rdstation-popup-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rdstation-popup-wrapper.rdstation-popup-position-center {
+    padding: 1rem;
+}
+
+.rd-popup-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.rdstation-popup {
+    position: relative;
+    background-color: white;
+    border-radius: 1rem;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+}
+
+.rd-close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #625b5c;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    z-index: 10001;
+}
+
+.rd-close-button:hover {
+    background-color: #f7f7f7;
+    color: #FF3944;
+}
+
+.rd-popup-content {
+    padding: 2.5rem;
+}
+
+.rd-popup-content h3 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.rd-popup-content > p {
+    color: #625b5c;
+    margin-bottom: 1.5rem;
+}
+
+/* Formulário RD */
+.rd-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.rd-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.rd-form-group label {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.875rem;
+}
+
+.rd-form-group input,
+.rd-form-group textarea {
+    padding: 0.875rem;
+    border: 2px solid #e6e6e6;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.rd-form-group input:focus,
+.rd-form-group textarea:focus {
+    outline: none;
+    border-color: #FF3944;
+    box-shadow: 0 0 0 3px rgba(255, 57, 68, 0.1);
+}
+
+.rd-form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.rd-checkbox label {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+}
+
+.rd-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-top: 2px;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.rd-form-disclaimer {
+    font-size: 0.75rem;
+    color: #625b5c;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.rd-form-disclaimer a {
+    color: #FF3944;
+    text-decoration: underline;
+}
+
+/* Floating Bar */
+.rdstation-floating-bar {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    background: linear-gradient(135deg, #FF3944, #ff5964);
+    color: white;
+    border-radius: 1rem;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 10px 30px rgba(255, 57, 68, 0.3);
+    z-index: 9998;
+    max-width: 400px;
+    animation: slideInLeft 0.5s ease-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.rdstation-floating-bar.hidden {
+    display: none;
+}
+
+.rd-close-button-small {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.25rem;
+    line-height: 1;
+    transition: all 0.3s ease;
+}
+
+.rd-close-button-small:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.rd-floating-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.rd-floating-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.rd-floating-text strong {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.rd-floating-text span {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.rd-floating-cta {
+    background-color: white;
+    color: #FF3944;
+    font-weight: 700;
+    text-align: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.rd-floating-cta:hover {
+    background-color: #f7f7f7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsivo */
+@media (max-width: 767px) {
+    .rdstation-floating-bar {
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+        max-width: none;
+    }
+
+    .rd-popup-content {
+        padding: 2rem 1.5rem;
+    }
+}
+</style>
+
+<!-- ===== JAVASCRIPT PARA POPUPS ===== -->
+<script>
+// Fechar popup central
+function closeRDPopup(wrapperId) {
+    const wrapper = document.getElementById(wrapperId);
+    if (wrapper) {
+        wrapper.style.display = 'none';
+    }
+}
+
+// Fechar floating bar
+function closeFloatingBar() {
+    const floatingBar = document.getElementById('rd-floating-bar');
+    if (floatingBar) {
+        floatingBar.classList.add('hidden');
+        // Salvar no localStorage para não mostrar novamente na sessão
+        localStorage.setItem('rd-floating-bar-closed', 'true');
+    }
+}
+
+// Abrir popup após X segundos (opcional)
+function showRDPopupAfterDelay(wrapperId, delayInSeconds = 30) {
+    setTimeout(() => {
+        const wrapper = document.getElementById(wrapperId);
+        if (wrapper) {
+            wrapper.style.display = 'flex';
+        }
+    }, delayInSeconds * 1000);
+}
+
+// Abrir popup ao sair da página (exit intent - opcional)
+function enableExitIntent(wrapperId) {
+    let shown = false;
+    document.addEventListener('mouseleave', function(e) {
+        if (e.clientY < 0 && !shown) {
+            const wrapper = document.getElementById(wrapperId);
+            if (wrapper) {
+                wrapper.style.display = 'flex';
+                shown = true;
+            }
+        }
+    });
+}
+
+// Verificar se floating bar deve ser exibida
+document.addEventListener('DOMContentLoaded', function() {
+    const floatingBarClosed = localStorage.getItem('rd-floating-bar-closed');
+    const floatingBar = document.getElementById('rd-floating-bar');
+
+    if (floatingBarClosed === 'true' && floatingBar) {
+        floatingBar.classList.add('hidden');
+    }
+});
+
+// Tracking de eventos (opcional - integrar com Google Analytics)
+function trackRDEvent(category, action, label) {
+    if (typeof gtag !== 'undefined') {
+        gtag('event', action, {
+            'event_category': category,
+            'event_label': label
+        });
+    }
+    console.log('RD Event:', category, action, label);
+}
+
+// CONFIGURAÇÕES - DESCOMENTAR PARA ATIVAR:
+
+// 1. Mostrar popup após 30 segundos
+// showRDPopupAfterDelay('rd-popup-central-wrapper', 30);
+
+// 2. Mostrar popup ao tentar sair da página (exit intent)
+// enableExitIntent('rd-popup-central-wrapper');
+
+// 3. Fechar popup ao pressionar ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const popups = document.querySelectorAll('.rdstation-popup-wrapper');
+        popups.forEach(popup => {
+            if (popup.style.display === 'flex') {
+                popup.style.display = 'none';
+            }
+        });
+    }
+});
+
+// 4. Prevenir envio do formulário de teste (remover em produção)
+// Em produção, o formulário será enviado normalmente para o RD Station
+/*
+document.addEventListener('DOMContentLoaded', function() {
+    const rdForms = document.querySelectorAll('.rd-form');
+    rdForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Formulário enviado! (Em produção, isso enviará para o RD Station)');
+            closeRDPopup('rd-popup-central-wrapper');
+        });
+    });
+});
+*/
+</script>
+
+<!-- ===== INSTRUÇÕES DE CONFIGURAÇÃO ===== -->
+<!--
+1. OBTER TOKEN RD STATION:
+   - Acesse: https://app.rdstation.com.br/configuracoes/conversoes
+   - Copie seu "Token Público"
+   - Substitua "SEU_TOKEN_RDSTATION_AQUI" pelo seu token
+
+2. CONFIGURAR CAMPOS PERSONALIZADOS:
+   - No RD Station, vá em Configurações > Campos
+   - Crie campos personalizados se necessário
+   - Use a sintaxe: custom_fields[nome_do_campo]
+
+3. ATIVAR POPUPS:
+   - Descomente as linhas no JavaScript para ativar:
+     * showRDPopupAfterDelay() - Popup após X segundos
+     * enableExitIntent() - Popup ao sair da página
+
+4. TESTAR INTEGRAÇÃO:
+   - Preencha o formulário e envie
+   - Verifique no RD Station > Leads se o lead foi capturado
+
+5. PERSONALIZAÇÕES:
+   - Ajuste cores, textos e CTAs conforme necessário
+   - Modifique delays e comportamentos dos popups
+
+6. GDPR/LGPD:
+   - Certifique-se de ter os checkboxes de consentimento
+   - Link para Política de Privacidade deve estar visível
+-->
